@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
 import data from './data.js';
 import Detail from './routes/detail.js';
+import axios from 'axios';
 
 function App() {
 
@@ -65,7 +66,18 @@ function App() {
         <Route path='*' element={<div>없는 페이지입니다</div>} />
       </Routes>
 
-      
+      <button onClick={() => {
+        axios.get('https://codingapple1.github.io/shop/data2.json').then((result) => { 
+          let copy = [...shoes, ...result.data];
+          console.log(copy)
+          setShoes(copy);
+
+        })
+        .catch(() => {
+          console.log('로드 실패')
+        })
+      }}>버튼</button>
+
     </div>
   );
 }
