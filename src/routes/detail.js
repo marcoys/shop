@@ -1,14 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { css } from "styled-components";
+import Nav from 'react-bootstrap/Nav';
+import { cleanup } from "@testing-library/react";
+import { Context1 } from './../App.js'
 
 function Detail(props) {
+
+  let { 재고, shoes } = useContext(Context1);
+  
+
   let {id} = useParams();
   let 찾은상품 = props.shoes.find(function(i) {
     return i.id == id;
   })
-  let [alertt, setAlert] = useState(true);
+  let [alert, setAlert] = useState(true);
   let [ip, setInput] = useState('');
+  let [tab, setTab] = useState(0);
+  let [dfade, setDfade] = useState('');
   
   useEffect(() => {
     let a = setTimeout(() => { setAlert(false) }, 2000)
@@ -24,8 +33,20 @@ function Detail(props) {
     }
   }, [ip])
 
+  useEffect(() => {
+    let b = setTimeout(() => {
+      setDfade('end');
+    }, 200)
+
+    return () => {
+      clearTimeout(b);
+      setDfade('')
+    }
+  }, [])
+
   return (
-    <div className="container">
+    <div className={`container start ${dfade}`}>
+      {재고}
       <input type="text" onChange={(e) => { setInput(e.target.value)}} />
       {
         alert == true ? 
@@ -45,7 +66,50 @@ function Detail(props) {
           <button className="btn btn-danger">주문하기</button> 
         </div>
       </div>
+
+      <Nav variant="tabs"  defaultActiveKey="link0">
+        <Nav.Item>
+          <Nav.Link onClick={() => {setTab(0)}} eventKey="link0">버튼0</Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link onClick={() => {setTab(1)}} eventKey="link1">버튼1</Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link onClick={() => {setTab(2)}} eventKey="link2">버튼2</Nav.Link>
+        </Nav.Item>
+    </Nav>
+    <Tabcontent tab={tab} />
+
     </div> 
+  )
+}
+
+function Tabcontent(props) { //(props) 대신 ({tab}) 사용가능
+  // if( props.tab === 0 ) {
+  //   return <div>내용0</div>
+  // } else if( props.tab === 1 ) {
+  //   return <div>내용1</div>
+  // } else if( props.tab === 2 ) {
+  //   return <div>내용2</div>
+  // }
+let [fade, setFade] = useState('')
+let { 재고 } = useContext(Context1);
+
+  useEffect(() => {
+    let a = setTimeout(() => {
+      setFade('end')
+    }, 300)
+    
+    return () => {
+      clearTimeout(a);
+      setFade('');
+    }
+  }, [props.tab])
+
+  return (
+      <div className={`start ${fade}`}>
+    {[<div>{재고}</div>, <div>내용1</div>, <div>내용2</div>][props.tab]}
+      </div>
   )
 }
 

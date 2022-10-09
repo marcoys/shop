@@ -1,17 +1,26 @@
 import logo from './logo.svg';
 import './App.css';
 import { Button, Container, Nav, Navbar, Row, Col } from 'react-bootstrap';
-import { useState } from 'react';
+import { createContext, useState } from 'react';
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
 import data from './data.js';
 import Detail from './routes/detail.js';
+import Cart from './routes/Cart.js';
 import axios from 'axios';
+
+export let Context1 = createContext();
 
 function App() {
 
   let [shoes , setShoes] = useState(data);
+  let [ click , setClick ] = useState(2);
+  let [ loading, setLoading ] = useState(false);
+  let [재고] = useState([10, 11, 12])
   let navigate = useNavigate();
 
+  const plusClick = () => {
+    setClick(click + 1);
+  }
 
   return (
     <div className="App">
@@ -48,9 +57,15 @@ function App() {
           </>
         } />
         <Route path='/detail/:id' element={
-          <>
+          <Context1.Provider value={{ 재고, shoes }}>
             <Detail shoes={shoes} />
-          </>
+          </Context1.Provider>
+        } />
+
+        <Route path='/cart' element={
+          <Context1.Provider value={{ shoes }}>
+            <Cart />
+          </Context1.Provider>
         } />
 
         <Route path='/about' element={<About />}>
@@ -66,16 +81,38 @@ function App() {
         <Route path='*' element={<div>없는 페이지입니다</div>} />
       </Routes>
 
-      <button onClick={() => {
-        axios.get('https://codingapple1.github.io/shop/data2.json').then((result) => { 
+      {
+        loading == true ? <Loading /> : null
+      }
+
+      <button className='btn_plus' onClick={() => { 
+
+        plusClick();
+        console.log(click);
+        
+        if(click == 3) {
+          document.querySelector('.btn_plus').style.display = 'none';
+        }
+
+        setLoading(!loading);
+        
+        axios.get('https://codingapple1.github.io/shop/data' + click + '.json').then((result) => { 
           let copy = [...shoes, ...result.data];
           console.log(copy)
           setShoes(copy);
-
+          setLoading(false);
         })
         .catch(() => {
           console.log('로드 실패')
+          setLoading(false);
         })
+
+        // 동시에 ajax 여러개 요청
+        // Promise.all([ axios.get('/data1.json'), axios.get('/data2.json')]).then(() => {
+
+        // })
+
+        
       }}>버튼</button>
 
     </div>
@@ -110,6 +147,18 @@ function Event() {
     <div>
       <h4>오늘의 이벤트</h4>
       <Outlet></Outlet>
+    </div>
+  )
+}
+
+function Loading() {
+
+  const loadimgUrl = "/images/giphy.gif"
+  
+  return(
+    <div>
+      로딩중
+      <img src={loadimgUrl} alt="" style={{width: 100}}/>
     </div>
   )
 }
