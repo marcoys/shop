@@ -1,19 +1,19 @@
+import { click } from '@testing-library/user-event/dist/click';
 import React, { useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { css } from 'styled-components';
 import { Table } from 'react-bootstrap';
-import { cleanup } from '@testing-library/react';
-import { Context1 } from './../App.js';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { changeName } from '../store';
 
 function Cart() {
-  let state = useSelector((state) => {
-    return state;
-  });
+  let state = useSelector((state) => { return state });
+  let dispatch = useDispatch(); // store.js로 요청
+  let [ cplus, setCplus ] = useState(0);
+
   console.log(state.arr);
 
   return (
     <div>
+      {state.user}
       <Table>
         <thead>
           <tr>
@@ -31,6 +31,12 @@ function Cart() {
               <td>{state.arr[i].name}</td>
               <td>{state.arr[i].count}</td>
               <td>안녕</td>
+              <td>
+                <button onClick={() => {
+                  dispatch( changeName() ) // Redux 스테이트 변경
+                  
+              }}>+</button>
+              </td>
             </tr>
           ))
           }
