@@ -5,7 +5,7 @@ let user = createSlice({
   initialState : 'kim',
   reducers : {
     changeName(state) {
-      return 'john' + state
+      return 'jon' + state
     },
     asdad() {
 
@@ -26,8 +26,16 @@ let arr = createSlice({
   initialState : [
     {id : 0, name : 'White and Black', count : 2},
     {id : 2, name : 'Grey Yordan', count : 1}
-  ] 
+  ],
+  reducers : {
+    addCount(state, action) {
+      let cnt = state.findIndex((a) => { return a.id === action.payload})
+      state[cnt].count++
+    }
+  }
 })
+
+export let { addCount } = arr.actions
 
 export default configureStore({
   reducer: {

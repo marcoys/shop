@@ -2,12 +2,11 @@ import { click } from '@testing-library/user-event/dist/click';
 import React, { useContext, useEffect, useState } from 'react';
 import { Table } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { changeName } from '../store';
+import { addCount, changeName } from '../store';
 
 function Cart() {
   let state = useSelector((state) => { return state });
   let dispatch = useDispatch(); // store.js로 요청
-  let [ cplus, setCplus ] = useState(0);
 
   console.log(state.arr);
 
@@ -33,8 +32,7 @@ function Cart() {
               <td>안녕</td>
               <td>
                 <button onClick={() => {
-                  dispatch( changeName() ) // Redux 스테이트 변경
-                  
+                  dispatch( addCount(state.arr[i].id) ) // Redux 스테이트 변경
               }}>+</button>
               </td>
             </tr>
