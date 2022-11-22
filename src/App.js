@@ -1,40 +1,30 @@
 import logo from './logo.svg';
 import './App.css';
 import { Button, Container, Nav, Navbar, Row, Col } from 'react-bootstrap';
-import { createContext, useState } from 'react';
-import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
+import { useState } from 'react';
 import data from './data.js';
-import Detail from './routes/detail.js';
-import Cart from './routes/Cart.js';
-import axios from 'axios';
-
-export let Context1 = createContext();
+import {Routes, Route, Link} from 'react-router-dom';
+import Detail from './detail.js';
 
 function App() {
 
   let [shoes , setShoes] = useState(data);
-  let [ click , setClick ] = useState(2);
-  let [ loading, setLoading ] = useState(false);
-  let [재고] = useState([10, 11, 12])
-  let navigate = useNavigate();
-
-  const plusClick = () => {
-    setClick(click + 1);
-  }
+  console.log(shoes);
 
   return (
     <div className="App">
     
       <Navbar bg="light" variant="light">
         <Container>
-          <Navbar.Brand onClick={() => navigate('/')}>Navbar</Navbar.Brand>
+          <Navbar.Brand href="#home">Navbar</Navbar.Brand>
           <Nav className="me-auto">
-            <Nav.Link onClick={() => navigate('/')}>Home</Nav.Link>
-            <Nav.Link onClick={() => navigate('/detail/0')}>Detail</Nav.Link>
-            <Nav.Link onClick={() => navigate(-1)}>뒤로</Nav.Link>
-            <Nav.Link onClick={() => navigate(1)}>앞으로</Nav.Link>
+            <Nav.Link href="#home">Home</Nav.Link>
+            <Nav.Link href="#features">Features</Nav.Link>
+            <Nav.Link href="#pricing">Pricing</Nav.Link>
           </Nav>
         </Container>
+        <Link to="/">홈</Link>
+        <Link to="/detail">상세페이지</Link>
       </Navbar>
 
       <div className="main-bg" style={{backgroundImage : 'url('+ process.env.PUBLIC_URL + '/images/bg.png)'}}>
@@ -56,29 +46,12 @@ function App() {
             </Container>
           </>
         } />
-        <Route path='/detail/:id' element={
-          <Context1.Provider value={{ 재고, shoes }}>
-            <Detail shoes={shoes} />
-          </Context1.Provider>
+        <Route path='/detail' element={
+          <>
+          <Detail></Detail>
+          </>
         } />
-
-        <Route path='/cart' element={
-          <Context1.Provider value={{ shoes }}>
-            <Cart />
-          </Context1.Provider>
-        } />
-
-        <Route path='/about' element={<About />}>
-          <Route path='member' element={<div>멤버임</div>} />
-          <Route path='location' element={<div>지도임</div>} />
-        </Route>
-
-        <Route path='/event' element={<Event/>}>
-          <Route path='one' element={<div>첫 주문시 양배추즙 서비스</div>}/>
-          <Route path='two' element={<div>생일기념 쿠폰받기</div>}/>
-        </Route>
-
-        <Route path='*' element={<div>없는 페이지입니다</div>} />
+        <Route path='/about' element={<div>어바웃페이지임</div>} />
       </Routes>
 
       {
@@ -131,36 +104,6 @@ function Card(props) {
       <p>{props.shoes.content}</p>
     </Col>
   );
-}
-
-function About() {
-  return(
-    <div>
-      <h4>회사정보임</h4>
-      <Outlet></Outlet>
-    </div>
-  ) 
-}
-
-function Event() {
-  return (
-    <div>
-      <h4>오늘의 이벤트</h4>
-      <Outlet></Outlet>
-    </div>
-  )
-}
-
-function Loading() {
-
-  const loadimgUrl = "/images/giphy.gif"
-  
-  return(
-    <div>
-      로딩중
-      <img src={loadimgUrl} alt="" style={{width: 100}}/>
-    </div>
-  )
 }
 
 export default App;

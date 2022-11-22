@@ -3,9 +3,13 @@ import { useParams } from "react-router-dom";
 import { css } from "styled-components";
 import Nav from 'react-bootstrap/Nav';
 import { cleanup } from "@testing-library/react";
-import { Context1 } from './../App.js'
+import { Context1 } from './../App.js';
+import { useDispatch, useSelector } from 'react-redux';
+import { addItem } from '../store';
 
 function Detail(props) {
+  let state = useSelector((state) => { return state });
+  let dispatch = useDispatch();
 
   let { 재고, shoes } = useContext(Context1);
   
@@ -63,7 +67,9 @@ function Detail(props) {
           <h4 className="pt-5">{찾은상품.title}</h4>
           <p>{찾은상품.content}</p>
           <p>{찾은상품.price}원</p>
-          <button className="btn btn-danger">주문하기</button> 
+          <button className="btn btn-danger" onClick={() => {
+            dispatch( addItem({id : 찾은상품.id, name : 찾은상품.name, count : 1}) )
+          }}>주문하기</button> 
         </div>
       </div>
 

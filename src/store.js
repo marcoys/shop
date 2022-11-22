@@ -31,11 +31,15 @@ let arr = createSlice({
     addCount(state, action) {
       let cnt = state.findIndex((a) => { return a.id === action.payload})
       state[cnt].count++
+    },
+    addItem(state, action) {
+      let newArr = action.payload;
+      state.push(newArr)
     }
   }
 })
 
-export let { addCount } = arr.actions
+export let { addCount, addItem } = arr.actions
 
 export default configureStore({
   reducer: {
